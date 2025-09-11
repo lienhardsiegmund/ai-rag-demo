@@ -1,0 +1,56 @@
+[
+  {
+    "source": "Auszahlung.md",
+    "chunk_id": 0,
+    "title": "Prozess: Kreditauszahlung nach Bewilligung",
+    "text": "Prozess: Kreditauszahlung nach Bewilligung\n**Kontext:** Dieser fiktive Leitfaden beschreibt die Schritte und typische Fristen der Kreditauszahlung\nnach finaler Bewilligung. Personen- und Kontodaten sind Muster (z. B. Herr Max Müller, IBAN DE89 3704 0044 0532 0130 00)."
+  },
+  {
+    "source": "Auszahlung.md",
+    "chunk_id": 1,
+    "title": "Auszahlungsdauer",
+    "text": "Auszahlungsdauer\nNach der schriftlichen Bewilligung erfolgt die Auszahlung in der Regel **innerhalb von 2–3 Bankarbeitstagen**.\nBei Auszahlungen auf externe Kontoverbindungen kann es vereinzelt zu zusätzlichen 24–48 Stunden Laufzeit kommen."
+  },
+  {
+    "source": "Auszahlung.md",
+    "chunk_id": 2,
+    "title": "Voraussetzungen für die Auszahlung",
+    "text": "Voraussetzungen für die Auszahlung\n* Vollständige Unterlagen liegen vor (u. a. Ausweiskopie, Adressnachweis).\n* Signierter Kreditvertrag ist im System archiviert.\n* Kontoverbindung geprüft (z. B. IBAN: DE89 3704 0044 0532 0130 00)."
+  },
+  {
+    "source": "Auszahlung.md",
+    "chunk_id": 3,
+    "title": "Benachrichtigung",
+    "text": "Benachrichtigung\nDer Kunde (z. B. Herr Max Müller, Musterstraße 12, 50667 Köln) erhält nach Ausführung eine E-Mail-Bestätigung."
+  },
+  {
+    "source": "Auszahlung.md",
+    "chunk_id": 4,
+    "title": "Rückfragen",
+    "text": "Rückfragen\nInterne Kontaktstelle: Team Auszahlung – auszahlung@beispielbank.de"
+  },
+  {
+    "source": "Schulung_Auszahlung.md",
+    "chunk_id": 0,
+    "title": "Schulungsunterlage: Kreditauszahlung",
+    "text": "Schulungsunterlage: Kreditauszahlung\nDieses Dokument dient ausschließlich der internen Schulung. Alle Daten sind fiktiv."
+  },
+  {
+    "source": "Schulung_Auszahlung.md",
+    "chunk_id": 1,
+    "title": "Beispiel: Auszahlungsprozess",
+    "text": "Beispiel: Auszahlungsprozess\nNach der Bewilligung wird die Kreditsumme in der Regel **innerhalb von 2 Bankarbeitstagen** auf das angegebene Konto überwiesen."
+  },
+  {
+    "source": "Schulung_Auszahlung.md",
+    "chunk_id": 2,
+    "title": "Musterkunde",
+    "text": "Musterkunde\nName: Frau Anna Schneider  \nAdresse: Hauptstraße 45, 80331 München  \nIBAN: DE12 3456 7890 1234 5678 90  \n\nDer Kunde erhält nach der Überweisung eine E-Mail-Benachrichtigung."
+  },
+  {
+    "source": "Schulung_Auszahlung.md",
+    "chunk_id": 3,
+    "title": "Hinweise für Sachbearbeiter",
+    "text": "Hinweise für Sachbearbeiter\n- Prüfen Sie, ob alle Dokumente vollständig sind.\n- Achten Sie darauf, dass sensible Daten **nicht an Dritte weitergegeben** werden.\n- Bei Rückfragen wenden Sie sich bitte an die interne Kontaktstelle **Team Auszahlung**."
+  }
+]

@@ -1,0 +1,5 @@
+.venv
+audit.log
+# Python Cache
+__pycache__/
+*.py[cod]

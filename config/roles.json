@@ -1,0 +1,16 @@
+{
+  "Sachbearbeiter": {
+    "allowed_sources": [
+      "Auszahlung.md",
+      "Schulung_Auszahlung.md"
+    ]
+  },
+  "Azubi": {
+    "allowed_sources": [
+      "Schulung_Auszahlung.md"
+    ]
+  },
+  "Gast": {
+    "allowed_sources": []
+  }
+}

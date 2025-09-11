@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Demo – Kreditauszahlung</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 2rem;
+      max-width: 800px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      color: #111827;
+      text-align: center;
+    }
+    .input-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus, select:focus {
+      border-color: #2563eb;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: block;
+      margin: 0 auto;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    /* Antwortkarte */
+    .answer-card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #111827;
+    }
+    .answer-card .source {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-left: 4px solid #2563eb;
+      background: #f9fafb;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #374151;
+    }
+    /* Maskierungen */
+    .pii {
+      color: red;
+      font-weight: bold;
+      background: #fee2e2;
+      padding: 0 0.25rem;
+      border-radius: 4px;
+    }
+    /* Pipeline */
+    #pipeline {
+      margin-top: 2rem;
+    }
+    #pipeline h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: #111827;
+    }
+    .pipeline-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .pipeline-step {
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .pipeline-step.done {
+      border-color: #10b981;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    .pipeline-step.skipped {
+      border-color: #f59e0b;
+      background: #fffbeb;
+      color: #78350f;
+    }
+    .pipeline-step.blocked {
+      border-color: #ef4444;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+    .pipeline-step strong {
+      font-size: 1rem;
+      display: block;
+    }
+    .pipeline-step small {
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+    .pipeline-step .detail {
+      font-size: 0.85rem;
+      color: #374151;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>RAG Demo – Kreditauszahlung</h1>
+
+    <div class="input-group">
+      <label for="question">Frage</label>
+      <textarea id="question" placeholder="z. B. Wie lange dauert die Auszahlung nach der Bewilligung?">Wie lange dauert die Auszahlung nach der Bewilligung?</textarea>
+    </div>
+
+    <div class="input-group">
+      <label for="role">Rolle auswählen</label>
+      <select id="role">
+        <option value="Sachbearbeiter">Sachbearbeiter</option>
+        <option value="Azubi">Azubi</option>
+        <option value="Gast">Gast</option>
+      </select>
+    </div>
+
+    <button id="askBtn">Frage stellen</button>
+
+    <div id="answer"></div>
+
+    <div id="pipeline">
+      <h3>Verarbeitungs-Pipeline</h3>
+      <ul id="pipeline-steps" class="pipeline-list"></ul>
+    </div>
+  </div>
+
+  <script>
+    const answerEl = document.getElementById('answer');
+    const pipelineEl = document.getElementById('pipeline-steps');
+
+    function renderAnswer(answer, sources) {
+      // Maskierte Tokens in rote Hervorhebung umwandeln
+      let html = answer
+        .replace(/\[Name maskiert\]/g, '<span class="pii">[Name maskiert]</span>')
+        .replace(/\[Ort maskiert\]/g, '<span class="pii">[Ort maskiert]</span>')
+        .replace(/\[Organisation maskiert\]/g, '<span class="pii">[Organisation maskiert]</span>')
+        .replace(/\[Adresse maskiert\]/g, '<span class="pii">[Adresse maskiert]</span>')
+        .replace(/\[IBAN maskiert\]/g, '<span class="pii">[IBAN maskiert]</span>');
+
+      let srcHtml = "";
+      if (sources && sources.length) {
+        const s = sources[0];
+        srcHtml = `<div class="source">
+          Quelle: <strong>${s.document}</strong>, Abschnitt: <em>${s.title || "?"}</em>
+        </div>`;
+      }
+
+      answerEl.innerHTML = `<div class="answer-card">${html}${srcHtml}</div>`;
+    }
+
+    document.getElementById('askBtn').addEventListener('click', async () => {
+      const question = document.getElementById('question').value;
+      const user_role = document.getElementById('role').value;
+      answerEl.textContent = 'Wird geladen...';
+      pipelineEl.innerHTML = '';
+
+      // alte EventSource schließen
+      if (window._evtSrc) {
+        try { window._evtSrc.close(); } catch {}
+      }
+
+      const url = `/api/query_stream?question=${encodeURIComponent(question)}&user_role=${encodeURIComponent(user_role)}`;
+      const es = new EventSource(url);
+      window._evtSrc = es;
+
+      es.addEventListener("step", (ev) => {
+        const payload = JSON.parse(ev.data);
+        const li = document.createElement("li");
+        li.className = `pipeline-step ${payload.status}`;
+        li.innerHTML = `
+          <strong>${payload.step}</strong>
+          <small>${payload.arch_layer}</small>
+          <div class="detail">${payload.detail || ""}</div>
+        `;
+        pipelineEl.appendChild(li);
+      });
+
+      es.addEventListener("final", (ev) => {
+        const payload = JSON.parse(ev.data);
+        renderAnswer(payload.answer, payload.sources);
+        es.close();
+      });
+
+      es.addEventListener("error", (err) => {
+        console.error("SSE-Fehler:", err);
+        answerEl.textContent = "Fehler beim Stream.";
+        try { es.close(); } catch {}
+      });
+    });
+  </script>
+</body>
+</html>
