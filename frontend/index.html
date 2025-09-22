@@ -25,9 +25,7 @@
       color: #111827;
       text-align: center;
     }
-    .input-group {
-      margin-bottom: 1.25rem;
-    }
+    .input-group { margin-bottom: 1.25rem; }
     label {
       display: block;
       font-weight: 600;
@@ -43,9 +41,18 @@
       outline: none;
       transition: border-color 0.2s;
     }
-    textarea:focus, select:focus {
-      border-color: #2563eb;
+    textarea:focus, select:focus { border-color: #2563eb; }
+
+    /* Rolle & Modus nebeneinander */
+    .row {
+      display: flex;
+      gap: 1rem;
     }
+    .row .input-group {
+      flex: 1;
+      margin-bottom: 0; /* überschreibt das globale spacing */
+    }
+
     button {
       background: #2563eb;
       color: white;
@@ -59,9 +66,8 @@
       display: block;
       margin: 0 auto;
     }
-    button:hover {
-      background: #1d4ed8;
-    }
+    button:hover { background: #1d4ed8; }
+
     /* Antwortkarte */
     .answer-card {
       background: #ffffff;
@@ -82,7 +88,8 @@
       font-size: 0.95rem;
       color: #374151;
     }
-    /* Maskierungen */
+
+    /* Maskierung */
     .pii {
       color: red;
       font-weight: bold;
@@ -90,22 +97,11 @@
       padding: 0 0.25rem;
       border-radius: 4px;
     }
+
     /* Pipeline */
-    #pipeline {
-      margin-top: 2rem;
-    }
-    #pipeline h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.75rem;
-      color: #111827;
-    }
-    .pipeline-list {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    #pipeline { margin-top: 2rem; }
+    #pipeline h3 { font-size: 1.2rem; margin-bottom: 0.75rem; color: #111827; }
+    .pipeline-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
     .pipeline-step {
       padding: 0.75rem 1rem;
       border-radius: 12px;
@@ -113,34 +109,39 @@
       background: #f9fafb;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .pipeline-step.done {
-      border-color: #10b981;
-      background: #ecfdf5;
-      color: #065f46;
-    }
-    .pipeline-step.skipped {
-      border-color: #f59e0b;
-      background: #fffbeb;
-      color: #78350f;
-    }
-    .pipeline-step.blocked {
-      border-color: #ef4444;
-      background: #fef2f2;
-      color: #991b1b;
-    }
-    .pipeline-step strong {
-      font-size: 1rem;
-      display: block;
-    }
-    .pipeline-step small {
+    .pipeline-step.done { border-color: #10b981; background: #ecfdf5; color: #065f46; }
+    .pipeline-step.skipped { border-color: #f59e0b; background: #fffbeb; color: #78350f; }
+    .pipeline-step.blocked { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+    .pipeline-step strong { font-size: 1rem; display: block; }
+    .pipeline-step small { font-size: 0.85rem; color: #6b7280; }
+    .pipeline-step .detail { font-size: 0.85rem; color: #374151; margin-top: 0.25rem; }
+
+    /* Aufklapp-Details */
+    .details {
+      display: none;
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #fff;
+      border-left: 3px solid #9ca3af;
+      border-radius: 6px;
       font-size: 0.85rem;
-      color: #6b7280;
+      color: #111827;
+      white-space: pre-wrap;
     }
-    .pipeline-step .detail {
+    .pipeline-step.open .details { display: block; }
+
+    /* Kleiner Button im Step */
+    .toggle-btn {
+      margin-top: 0.5rem;
+      background: #e5e7eb;
+      color: #111827;
+      padding: 0.35rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
       font-size: 0.85rem;
-      color: #374151;
-      margin-top: 0.25rem;
+      cursor: pointer;
     }
+    .toggle-btn:hover { background: #d1d5db; }
   </style>
 </head>
 <body>
@@ -149,40 +150,68 @@
 
     <div class="input-group">
       <label for="question">Frage</label>
-      <textarea id="question" placeholder="z. B. Wie lange dauert die Auszahlung nach der Bewilligung?">Wie lange dauert die Auszahlung nach der Bewilligung?</textarea>
+      <textarea id="question">Wie lange dauert die Auszahlung nach der Bewilligung?</textarea>
     </div>
 
     <div class="input-group">
-      <label for="role">Rolle auswählen</label>
-      <select id="role">
-        <option value="Sachbearbeiter">Sachbearbeiter</option>
-        <option value="Azubi">Azubi</option>
-        <option value="Gast">Gast</option>
-      </select>
+      <details>
+        <summary style="cursor: pointer; font-weight: 600; color: #2563eb; margin-bottom: 0.5rem;">
+          Optionen (Rolle & Modus)
+        </summary>
+        <div style="margin-top: 0.75rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+          <!-- Rolle -->
+          <div style="flex: 1;">
+            <label for="role">Rolle auswählen</label>
+            <select id="role">
+              <option value="Sachbearbeiter">Sachbearbeiter</option>
+              <option value="Azubi">Azubi</option>
+              <option value="Gast">Gast</option>
+            </select>
+          </div>
+          <!-- Modus -->
+          <div style="flex: 1;">
+            <label for="mode">Modus auswählen</label>
+            <select id="mode">
+              <option value="pseudonymize">Pseudonymisierung + Maskierung</option>
+              <option value="mask_only">Nur Maskierung (keine Pseudonymisierung)</option>
+            </select>
+          </div>
+        </div>
+      </details>
     </div>
 
-    <button id="askBtn">Frage stellen</button>
 
+    <div class="row">
+      <div class="input-group">
+        <button id="askBtn" style="margin-top: 30px;">Frage stellen</button>
+      </div>
+    </div>
     <div id="answer"></div>
 
     <div id="pipeline">
       <h3>Verarbeitungs-Pipeline</h3>
       <ul id="pipeline-steps" class="pipeline-list"></ul>
     </div>
+
+    <div id="resources" style="margin-top: 2rem; text-align: center; font-size: 0.95rem; color: #374151;">
+      📄 Testdokumente: 
+      <a href="/docs/Auszahlung.md" target="_blank" style="color:#2563eb; text-decoration:none;">Auszahlung.md</a> | 
+      <a href="/docs/Schulung_Auszahlung.md" target="_blank" style="color:#2563eb; text-decoration:none;">Schulung_Auszahlung.md</a>
+    </div>
   </div>
 
+  
   <script>
     const answerEl = document.getElementById('answer');
     const pipelineEl = document.getElementById('pipeline-steps');
 
     function renderAnswer(answer, sources) {
-      // Maskierte Tokens in rote Hervorhebung umwandeln
       let html = answer
-        .replace(/\[Name maskiert\]/g, '<span class="pii">[Name maskiert]</span>')
-        .replace(/\[Ort maskiert\]/g, '<span class="pii">[Ort maskiert]</span>')
-        .replace(/\[Organisation maskiert\]/g, '<span class="pii">[Organisation maskiert]</span>')
-        .replace(/\[Adresse maskiert\]/g, '<span class="pii">[Adresse maskiert]</span>')
-        .replace(/\[IBAN maskiert\]/g, '<span class="pii">[IBAN maskiert]</span>');
+        .replace(/\[Name maskiert[^\]]*\]/g, '<span class="pii">$&</span>')
+        .replace(/\[Ort maskiert[^\]]*\]/g, '<span class="pii">$&</span>')
+        .replace(/\[Organisation maskiert[^\]]*\]/g, '<span class="pii">$&</span>')
+        .replace(/\[Adresse maskiert[^\]]*\]/g, '<span class="pii">$&</span>')
+        .replace(/\[IBAN maskiert[^\]]*\]/g, '<span class="pii">$&</span>');
 
       let srcHtml = "";
       if (sources && sources.length) {
@@ -198,27 +227,54 @@
     document.getElementById('askBtn').addEventListener('click', async () => {
       const question = document.getElementById('question').value;
       const user_role = document.getElementById('role').value;
+      const mode = document.getElementById('mode').value;
+
       answerEl.textContent = 'Wird geladen...';
       pipelineEl.innerHTML = '';
 
-      // alte EventSource schließen
-      if (window._evtSrc) {
-        try { window._evtSrc.close(); } catch {}
-      }
+      if (window._evtSrc) { try { window._evtSrc.close(); } catch {} }
 
-      const url = `/api/query_stream?question=${encodeURIComponent(question)}&user_role=${encodeURIComponent(user_role)}`;
+      const url = `/api/query_stream?question=${encodeURIComponent(question)}&user_role=${encodeURIComponent(user_role)}&mode=${mode}`;
       const es = new EventSource(url);
       window._evtSrc = es;
 
       es.addEventListener("step", (ev) => {
         const payload = JSON.parse(ev.data);
+
         const li = document.createElement("li");
         li.className = `pipeline-step ${payload.status}`;
         li.innerHTML = `
           <strong>${payload.step}</strong>
-          <small>${payload.arch_layer}</small>
+          <small>${payload.arch_layer || ""}</small>
           <div class="detail">${payload.detail || ""}</div>
         `;
+
+        const details = document.createElement("div");
+        details.className = "details";
+
+        if (payload.snippets && payload.snippets.length) {
+          details.innerHTML = payload.snippets.map(s =>
+            `<div><strong>${s.source} (Abschnitt ${s.chunk_id})</strong><br>${s.preview}</div>`
+          ).join("<hr>");
+        } else if (payload.extra) {
+          details.textContent = payload.extra;
+        }
+
+        if ((payload.snippets && payload.snippets.length) || payload.extra) {
+          const btn = document.createElement("button");
+          btn.className = "toggle-btn";
+          btn.textContent = "Details anzeigen";
+
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const open = li.classList.toggle("open");
+            btn.textContent = open ? "Details verbergen" : "Details anzeigen";
+          });
+
+          li.appendChild(btn);
+          li.appendChild(details);
+        }
+
         pipelineEl.appendChild(li);
       });
 

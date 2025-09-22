@@ -8,4 +8,7 @@ spacy>=3.7.4
 pydantic>=2.7
 python-dotenv>=1.0.1
 openai>=1.42.0
-spacy>=3.7.4
+
+# Deutsches spaCy-Modell (Version passend zu spacy>=3.7)
+https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.7.0/de_core_news_sm-3.7.0-py3-none-any.whl
+

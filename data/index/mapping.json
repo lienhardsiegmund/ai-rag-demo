@@ -3,25 +3,25 @@
     "source": "Auszahlung.md",
     "chunk_id": 0,
     "title": "Prozess: Kreditauszahlung nach Bewilligung",
-    "text": "Prozess: Kreditauszahlung nach Bewilligung\n**Kontext:** Dieser fiktive Leitfaden beschreibt die Schritte und typische Fristen der Kreditauszahlung\nnach finaler Bewilligung. Personen- und Kontodaten sind Muster (z. B. Herr Max Müller, IBAN DE89 3704 0044 0532 0130 00)."
+    "text": "Prozess: Kreditauszahlung nach Bewilligung\n**Kontext:** Dieser fiktive Leitfaden beschreibt die Schritte und typische Fristen der Kreditauszahlung\nnach finaler Bewilligung. Personen- und Kontodaten sind Muster."
   },
   {
     "source": "Auszahlung.md",
     "chunk_id": 1,
     "title": "Auszahlungsdauer",
-    "text": "Auszahlungsdauer\nNach der schriftlichen Bewilligung erfolgt die Auszahlung in der Regel **innerhalb von 2–3 Bankarbeitstagen**.\nBei Auszahlungen auf externe Kontoverbindungen kann es vereinzelt zu zusätzlichen 24–48 Stunden Laufzeit kommen."
+    "text": "Auszahlungsdauer\nNach der schriftlichen Bewilligung erfolgt die Auszahlung auf das angegebene Konto (z. B. IBAN DE89 3704 0044 0532 0130 00,\nKontoinhaber Herr Max Müller, Musterstraße 12, 50667 Köln) in der Regel **innerhalb von 2–3 Bankarbeitstagen**.  \nBei Auszahlungen auf externe Kontoverbindungen – beispielsweise zur Stadtsparkasse Köln – kann es vereinzelt zu\nzusätzlichen 24–48 Stunden Laufzeit kommen."
   },
   {
     "source": "Auszahlung.md",
     "chunk_id": 2,
     "title": "Voraussetzungen für die Auszahlung",
-    "text": "Voraussetzungen für die Auszahlung\n* Vollständige Unterlagen liegen vor (u. a. Ausweiskopie, Adressnachweis).\n* Signierter Kreditvertrag ist im System archiviert.\n* Kontoverbindung geprüft (z. B. IBAN: DE89 3704 0044 0532 0130 00)."
+    "text": "Voraussetzungen für die Auszahlung\n* Vollständige Unterlagen liegen vor (u. a. Ausweiskopie, Adressnachweis).\n* Signierter Kreditvertrag ist im System archiviert.\n* Kontoverbindung geprüft."
   },
   {
     "source": "Auszahlung.md",
     "chunk_id": 3,
     "title": "Benachrichtigung",
-    "text": "Benachrichtigung\nDer Kunde (z. B. Herr Max Müller, Musterstraße 12, 50667 Köln) erhält nach Ausführung eine E-Mail-Bestätigung."
+    "text": "Benachrichtigung\nDer Kunde (z. B. Herr Max Müller) erhält nach Ausführung eine E-Mail-Bestätigung."
   },
   {
     "source": "Auszahlung.md",
@@ -39,17 +39,11 @@
     "source": "Schulung_Auszahlung.md",
     "chunk_id": 1,
     "title": "Beispiel: Auszahlungsprozess",
-    "text": "Beispiel: Auszahlungsprozess\nNach der Bewilligung wird die Kreditsumme in der Regel **innerhalb von 2 Bankarbeitstagen** auf das angegebene Konto überwiesen."
+    "text": "Beispiel: Auszahlungsprozess\nNach der Bewilligung wird die Kreditsumme für die Antragstellerin Frau Anna Schneider\n(Hauptstraße 45, 80331 München, IBAN DE12 3456 7890 1234 5678 90)\n**in der Regel innerhalb von 2 Bankarbeitstagen** auf das angegebene Konto überwiesen.  \n\nFalls eine Auszahlung auf ein externes Konto erfolgt, z. B. bei einer Überweisung zur Volksbank München,\nkann sich die Auszahlung um zusätzliche 1–2 Werktage verzögern."
   },
   {
     "source": "Schulung_Auszahlung.md",
     "chunk_id": 2,
-    "title": "Musterkunde",
-    "text": "Musterkunde\nName: Frau Anna Schneider  \nAdresse: Hauptstraße 45, 80331 München  \nIBAN: DE12 3456 7890 1234 5678 90  \n\nDer Kunde erhält nach der Überweisung eine E-Mail-Benachrichtigung."
-  },
-  {
-    "source": "Schulung_Auszahlung.md",
-    "chunk_id": 3,
     "title": "Hinweise für Sachbearbeiter",
     "text": "Hinweise für Sachbearbeiter\n- Prüfen Sie, ob alle Dokumente vollständig sind.\n- Achten Sie darauf, dass sensible Daten **nicht an Dritte weitergegeben** werden.\n- Bei Rückfragen wenden Sie sich bitte an die interne Kontaktstelle **Team Auszahlung**."
   }
