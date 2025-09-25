@@ -188,12 +188,17 @@
     </div>
     <div id="answer"></div>
 
-    <div id="pipeline">
+    <div id="pipeline" style="display:none; margin-top: 2rem;">
       <h3>Verarbeitungs-Pipeline</h3>
       <ul id="pipeline-steps" class="pipeline-list"></ul>
     </div>
 
-    <div id="resources" style="margin-top: 2rem; text-align: center; font-size: 0.95rem; color: #374151;">
+    <div id="audit-log" style="display:none; margin-top: 2rem;">
+      <h3>Audit-Log</h3>
+      <pre id="log-output" style="background:#f9fafb; padding:1rem; border-radius:8px; border:1px solid #e5e7eb; font-size:0.85rem; color:#111827; max-height:200px; overflow-y:auto;"></pre>
+    </div>
+
+    <div id="resources" style="margin-top: 2rem; text-align: left; font-size: 0.95rem; color: #374151;">
       📄 Testdokumente: 
       <a href="/docs/Auszahlung.md" target="_blank" style="color:#2563eb; text-decoration:none;">Auszahlung.md</a> | 
       <a href="/docs/Schulung_Auszahlung.md" target="_blank" style="color:#2563eb; text-decoration:none;">Schulung_Auszahlung.md</a>
@@ -232,6 +237,12 @@
       answerEl.textContent = 'Wird geladen...';
       pipelineEl.innerHTML = '';
 
+      document.getElementById('log-output').textContent = '';
+
+      // Pipeline & Audit-Log sichtbar machen
+      document.getElementById('pipeline').style.display = 'block';
+      document.getElementById('audit-log').style.display = 'block';
+
       if (window._evtSrc) { try { window._evtSrc.close(); } catch {} }
 
       const url = `/api/query_stream?question=${encodeURIComponent(question)}&user_role=${encodeURIComponent(user_role)}&mode=${mode}`;
@@ -244,7 +255,7 @@
         const li = document.createElement("li");
         li.className = `pipeline-step ${payload.status}`;
         li.innerHTML = `
-          <strong>${payload.step}</strong>
+          <strong><img src="/icons/${payload.icon}" style="width:18px; vertical-align:middle; margin-right:6px;">${payload.step}</strong>
           <small>${payload.arch_layer || ""}</small>
           <div class="detail">${payload.detail || ""}</div>
         `;
@@ -288,6 +299,16 @@
         console.error("SSE-Fehler:", err);
         answerEl.textContent = "Fehler beim Stream.";
         try { es.close(); } catch {}
+      });
+
+      const logOutput = document.getElementById('log-output');
+
+      es.addEventListener("log", (ev) => {
+        const payload = JSON.parse(ev.data);
+        const ts = new Date().toLocaleTimeString();
+        const entry = `[${ts}] Rolle=${payload.user_role}, Frage="${payload.question}"\nAntwort="${payload.answer_masked}"\nQuellen=${payload.sources.map(s => s.document).join(", ")}\n---\n`;
+        logOutput.textContent += entry;
+        logOutput.scrollTop = logOutput.scrollHeight; // auto-scroll
       });
     });
   </script>

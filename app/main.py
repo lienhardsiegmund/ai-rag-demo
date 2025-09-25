@@ -28,8 +28,9 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 app = FastAPI(title="RAG Demo – Kredit Auszahlung", version="0.4.0")
 
-# Statische Auslieferung der Testdokumente
+# Statische Auslieferung der Testdokumente und Icons
 app.mount("/docs", StaticFiles(directory=DOCS_DIR), name="docs")
+app.mount("/icons", StaticFiles(directory=os.path.join(PROJECT_ROOT, "frontend/icons")), name="icons")
 
 app.add_middleware(
     CORSMiddleware,
@@ -144,6 +145,7 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
                 "step": "Zugriffsprüfung (ABAC)",
                 "arch_layer": "Identity & Access / Policy-as-Code",
                 "status": "blocked",
+                "icon": "access.png",
                 "detail": f"Rolle '{user_role}' hat keinen Zugriff."
             }
             yield _sse_event("step", step_abac)
@@ -158,6 +160,7 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
             "step": "Zugriffsprüfung (ABAC)",
             "arch_layer": "Identity & Access / Policy-as-Code",
             "status": "done",
+            "icon": "access.png",
             "detail": f"Rolle '{user_role}' darf auf {', '.join(allowed)} zugreifen."
         }
         yield _sse_event("step", step_abac)
@@ -170,6 +173,7 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
             "step": "Retriever + Vektordatenbank",
             "arch_layer": "Data Platform / MLOps",
             "status": "done",
+            "icon": "retriever.png",
             "detail": f"{len(hits)} relevante Abschnitte gefunden.",
             "snippets": [
                 {
@@ -194,6 +198,7 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
                 "step": "PII-Pseudonymisierung (vor LLM)",
                 "arch_layer": "Data Protection",
                 "status": "done",
+                "icon": "dataprotection.png",
                 "detail": f"{len(pseudo_contexts)} Abschnitte pseudonymisiert.",
                 "extra": "\n\n".join(pseudo_contexts)
             }
@@ -211,6 +216,7 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
             "step": "LLM (Generator)",
             "arch_layer": "MLOps / LLMOps",
             "status": "done" if llm_contexts else "skipped",
+            "icon": "llm.png",
             "detail": "Antwort generiert." if llm_contexts else "Übersprungen."
         }
         yield _sse_event("step", step_llm)
@@ -232,6 +238,7 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
             "step": "PII-Maskierung (nach LLM)",
             "arch_layer": "Data Protection",
             "status": "done",
+            "icon": "dataprotection.png",
             "detail": detail_text
         }
         yield _sse_event("step", step_mask)
@@ -243,19 +250,25 @@ async def query_stream(question: str, user_role: str, mode: str = "default"):
             "chunk_id": h["chunk_id"],
             "title": h.get("title") or "",
         } for h in hits]
-        write_audit_log({
+        log_entry = {
             "user_role": user_role,
             "question": question,
             "answer_masked": masked_clean,
             "sources": sources
-        })
+        }
+        write_audit_log(log_entry)
+        
         step_audit = {
             "step": "Quellenangabe + Audit-Log",
             "arch_layer": "Observability & Audit",
             "status": "done",
+            "icon": "monitoring.png",
             "detail": f"{len(sources)} Quelle(n) geloggt."
         }
         yield _sse_event("step", step_audit)
+
+        yield _sse_event("log", log_entry)
+
         await asyncio.sleep(0.2)
 
         # Final
